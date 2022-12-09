@@ -19,11 +19,14 @@ namespace MailSlots
         private int ClientHandleMailSlot;       // дескриптор мэйлслота
         private Thread t;                       // поток для обслуживания мэйлслота
         private bool _continue = true;          // флаг, указывающий продолжается ли работа с мэйлслотом
+        private string mailSlotAddres;
         // конструктор формы
         public frmMain()
         {
             InitializeComponent();
             this.Text += "     " + Dns.GetHostName();   // выводим имя текущей машины в заголовок формы
+            tbMailSlot.Text = "ServerMailslot";
+            mailSlotAddres = $"\\\\*\\mailslot\\{tbMailSlot.Text}";
         }
 
         // присоединение к мэйлслоту
@@ -34,7 +37,7 @@ namespace MailSlots
                 if (!string.IsNullOrEmpty(loginText.Text))
                 {
                     // открываем мэйлслот, имя которого указано в поле tbMailSlot
-                    HandleMailSlot = DIS.Import.CreateFile(tbMailSlot.Text, DIS.Types.EFileAccess.GenericWrite, DIS.Types.EFileShare.Read, 0, DIS.Types.ECreationDisposition.OpenExisting, 0, 0);
+                    HandleMailSlot = DIS.Import.CreateFile(mailSlotAddres, DIS.Types.EFileAccess.GenericWrite, DIS.Types.EFileShare.Read, 0, DIS.Types.ECreationDisposition.OpenExisting, 0, 0);
                     if (HandleMailSlot != -1)
                     {
                         btnConnect.Enabled = false;
